@@ -45,7 +45,7 @@ const RegisterComplete = ({ history }) => {
                 await user.updatePassword(password)
                 const userIdToken = await user.getIdTokenResult()
 
-                history.push('/home')
+                history.push('/')
             }
 
         } catch (error) {
@@ -60,11 +60,11 @@ const RegisterComplete = ({ history }) => {
         <div className="container p-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3">
-                    <h4>Register</h4>
+                    <h4>Complete Registration</h4>
                     <form onSubmit={handleSubmit}>
                         <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} disabled />
                         <input type="password" className="form-control" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
-                        <input type="submit" className="btn btn-raised" value="Register" />
+                        <input type="submit" className="btn btn-raised my-3" value="Register" />
                     </form>
                 </div>
             </div>

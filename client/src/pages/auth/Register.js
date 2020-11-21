@@ -36,8 +36,8 @@ const Register = () => {
                 <div className="col-md-6 offset-md-3">
                     <h4>Register</h4>
                     <form onSubmit={handleSubmit}>
-                        <input type="email" className="form-control" value={email} onChange={e => handleChange(e)} />
-                        <input type="submit" className="btn btn-raised" value="Register" />
+                        <input type="email" className="form-control" value={email} onChange={e => handleChange(e)} placeholder="Email Address" />
+                        <input type="submit" className="btn btn-raised my-3" value="Register" />
                     </form>
                 </div>
             </div>

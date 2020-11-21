@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom'
-import { HomeOutlined, AppstoreOutlined, UserOutlined } from '@ant-design/icons';
-const { Item, SubMenu } = Menu
+import { HomeOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { auth } from '../../firebase'
+import { LOG_OUT } from '../../reducers/actions'
 
 const Header = () => {
 
-    const [current, setCurrent] = useState('home')
+    const { Item, SubMenu } = Menu
 
+    const [current, setCurrent] = useState('home')
+    const dispatch = useDispatch()
+    const history = useHistory()
 
 
     const handleClick = e => {
@@ -15,6 +21,16 @@ const Header = () => {
         setCurrent(e.key)
     }
 
+    const logout = e => {
+        auth.signOut()
+
+        dispatch({
+            type: LOG_OUT,
+            payload: null
+        })
+
+        history.push('/login')
+    }
 
     return (
 
@@ -31,6 +47,9 @@ const Header = () => {
                 </Menu.Item>
                 <Menu.Item key="account:2">
                     <Link to="/login">Login</Link>
+                </Menu.Item>
+                <Menu.Item key="account:3" icon={<LogoutOutlined />} onClick={logout}>
+                    Logout
                 </Menu.Item>
 
 
