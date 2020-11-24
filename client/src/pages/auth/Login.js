@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "antd";
 import { GoogleOutlined, MailOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GET_USER } from "../../reducers/actions";
 import { Link } from "react-router-dom";
+import { createOrUpdateUser } from "../../functions/auth";
 
 const Login = ({ history }) => {
   const [email, setEmail] = useState("");
@@ -14,6 +15,14 @@ const Login = ({ history }) => {
   const [loadings, setLoadings] = useState([false, false]);
 
   const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => ({ ...state }));
+
+  useEffect(() => {
+    if (user && user.token) {
+      history.push("/");
+    }
+  }, [user]);
 
   const googleLogin = async (index) => {
     let newLoadings = [...loadings];
@@ -26,13 +35,22 @@ const Login = ({ history }) => {
 
       const idTokenResult = await user.getIdTokenResult();
 
-      dispatch({
-        type: GET_USER,
-        payload: {
-          email: user.email,
-          token: idTokenResult.token,
-        },
-      });
+      createOrUpdateUser(idTokenResult.token)
+        .then((res) => {
+          const { name, email, role, _id } = res.data;
+
+          dispatch({
+            type: GET_USER,
+            payload: {
+              email: email,
+              token: idTokenResult.token,
+              role,
+              name,
+              id: _id,
+            },
+          });
+        })
+        .catch();
 
       history.push("/");
     } catch (error) {
@@ -55,13 +73,23 @@ const Login = ({ history }) => {
 
       const idTokenResult = await user.getIdTokenResult();
 
-      dispatch({
-        type: GET_USER,
-        payload: {
-          email: user.email,
-          token: idTokenResult.token,
-        },
-      });
+      //console.log(idTokenResult.token);
+      createOrUpdateUser(idTokenResult.token)
+        .then((res) => {
+          const { name, email, role, _id } = res.data;
+
+          dispatch({
+            type: GET_USER,
+            payload: {
+              email: email,
+              token: idTokenResult.token,
+              role,
+              name,
+              id: _id,
+            },
+          });
+        })
+        .catch();
 
       history.push("/");
     } catch (error) {

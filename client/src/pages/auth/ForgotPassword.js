@@ -8,6 +8,14 @@ const ForgotPassword = ({ history }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { user } = useSelector((state) => ({ ...state }));
+
+  useEffect(() => {
+    if (user && user.token) {
+      history.push("/");
+    }
+  }, [user]);
+
   const sendResetPassword = async () => {
     const config = {
       url: process.env.REACT_APP_FORGET_PASSWORD_REDIRECT_URI,
