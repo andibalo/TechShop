@@ -2,7 +2,7 @@ const admin = require("../firebase/index");
 
 exports.validateToken = async (req, res, next) => {
   //Validate Token will validate the firebase token sent from client in the req headers
-
+  //console.log(req.headers);
   try {
     const firebaseUser = await admin
       .auth()
@@ -13,7 +13,7 @@ exports.validateToken = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error);
+    //console.log(error);
 
     res.status(401).json({
       msg: "User token not valid",

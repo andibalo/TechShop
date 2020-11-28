@@ -24,6 +24,14 @@ const Login = ({ history }) => {
     }
   }, [user]);
 
+  const redirectByRole = async (role) => {
+    if (role === "admin") {
+      history.push("/admin/dashboard");
+    } else {
+      history.push("/user/history");
+    }
+  };
+
   const googleLogin = async (index) => {
     let newLoadings = [...loadings];
     newLoadings[index] = true;
@@ -49,10 +57,12 @@ const Login = ({ history }) => {
               id: _id,
             },
           });
-        })
-        .catch();
 
-      history.push("/");
+          redirectByRole(role);
+        })
+        .catch((err) => console.log(err));
+
+      //history.push("/");
     } catch (error) {
       console.log(error);
 
