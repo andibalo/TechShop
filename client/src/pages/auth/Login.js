@@ -24,7 +24,7 @@ const Login = ({ history }) => {
     }
   }, [user]);
 
-  const redirectByRole = async (role) => {
+  const redirectByRole = (role) => {
     if (role === "admin") {
       history.push("/admin/dashboard");
     } else {
@@ -98,10 +98,12 @@ const Login = ({ history }) => {
               id: _id,
             },
           });
-        })
-        .catch();
 
-      history.push("/");
+          redirectByRole(role);
+        })
+        .catch((err) => console.log(err));
+
+      //history.push("/");
     } catch (error) {
       console.log(error);
 

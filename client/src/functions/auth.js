@@ -27,3 +27,17 @@ export const currentUser = async (authToken) => {
 
   return res;
 };
+
+export const currentAdmin = async (authToken) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/current-admin`,
+
+    {
+      headers: {
+        authToken,
+      },
+    }
+  );
+
+  return res;
+};
