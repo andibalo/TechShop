@@ -53,12 +53,17 @@ const Header = () => {
             icon={<UserOutlined />}
             title="User"
           >
-            <Menu.Item key="account:1">
-              <Link to="/">Link</Link>
-            </Menu.Item>
-            <Menu.Item key="account:2">
-              <Link to="/">Link</Link>
-            </Menu.Item>
+            {user && user.role === "admin" && (
+              <Menu.Item key="account:1">
+                <Link to="/admin/dashboard">Dashboard</Link>
+              </Menu.Item>
+            )}
+            {user && user.role !== "admin" && (
+              <Menu.Item key="account:2">
+                <Link to="/user/history">Dashboard</Link>
+              </Menu.Item>
+            )}
+
             <Menu.Item
               key="account:3"
               icon={<LogoutOutlined />}
