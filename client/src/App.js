@@ -13,6 +13,9 @@ import Password from "./pages/user/Password";
 import Wishlist from "./pages/user/Wishlist";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateCategory from "./pages/category/CreateCategory";
+import UpdateCategory from "./pages/category/UpdateCategory";
+import SubCreate from "./pages/subcategory/SubCreate";
+import SubUpdate from "./pages/subcategory/SubUpdate";
 
 import UserRoute from "./components/routes/UserRoute";
 import AdminRoute from "./components/routes/AdminRoute";
@@ -69,6 +72,17 @@ const App = () => {
         <UserRoute exact path="/user/wishlist" component={Wishlist} />
         <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
         <AdminRoute exact path="/admin/category" component={CreateCategory} />
+        <AdminRoute
+          exact
+          path="/admin/category/:slug"
+          component={UpdateCategory}
+        />
+        <AdminRoute exact path="/admin/subcategory" component={SubCreate} />
+        <AdminRoute
+          exact
+          path="/admin/subcategory/:slug"
+          component={SubUpdate}
+        />
       </Switch>
     </Router>
   );

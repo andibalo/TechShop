@@ -3,20 +3,23 @@ import AdminNav from "../../components/nav/AdminNav";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import {
-  createCategory,
-  deleteCategory,
-  getCategories,
-} from "../../functions/category";
+  createSubcategory,
+  deleteSubcategory,
+  getSubcategories,
+} from "../../functions/subcategory";
+import { getCategories } from "../../functions/category";
 import { Spin } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import CategoryForm from "../../components/forms/CategoryForm";
 
-const CreateCategory = (props) => {
+const SubCreate = (props) => {
   const { user } = useSelector((state) => ({ ...state }));
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
   const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
@@ -31,7 +34,19 @@ const CreateCategory = (props) => {
       }
     };
 
+    const loadSubCategories = async () => {
+      try {
+        const res = await getSubcategories();
+
+        //console.log(res.data);
+        setSubCategories(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     loadCategories();
+    loadSubCategories();
   }, [loading]);
 
   const capitalize = (s) => {
@@ -44,7 +59,7 @@ const CreateCategory = (props) => {
       setLoading(true);
 
       try {
-        const res = await deleteCategory(slug, user.token);
+        const res = await deleteSubcategory(slug, user.token);
 
         setLoading(false);
         toast.success("Category has been deleted");
@@ -68,9 +83,16 @@ const CreateCategory = (props) => {
 
     setLoading(true);
 
+    if (!categoryId) {
+      toast.error("Please choose parent category");
+
+      return;
+    }
+
     try {
-      const res = await createCategory(user.token, {
+      const res = await createSubcategory(user.token, {
         name: capitalize(category),
+        parent: categoryId,
       });
 
       console.log(res);
@@ -82,7 +104,7 @@ const CreateCategory = (props) => {
       console.log(error);
 
       setLoading(false);
-      toast.error(`Failed to create category, please try again later.`);
+      toast.error(`Failed to create sub category, please try again later.`);
     }
   };
 
@@ -107,40 +129,62 @@ const CreateCategory = (props) => {
             size="large"
             spinning={loading || categories.length <= 0}
           >
-            <h4>Create Category</h4>
+            <h4>Create Sub-Category</h4>
+            <div className="form-group">
+              <label>Select Parent Category</label>
+              <select
+                className="form-control"
+                name="category"
+                onChange={(e) => setCategoryId(e.target.value)}
+              >
+                <option selected disabled hidden>
+                  Select
+                </option>
+                {categories.length > 0 &&
+                  categories.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
             <CategoryForm
               handleSubmit={handleSubmit}
               category={category}
-              placeholder="Category Name"
               action="Create"
+              placeholder="Sub-Category Name"
               setCategory={setCategory}
             />
             <hr />
+
             <input
               type="text"
               className="form-control mb-4"
-              placeholder="Search Category"
+              placeholder="Search Sub-Category"
               value={keyword}
               onChange={handleSearchChange}
             />
-            {categories &&
-              categories.filter(filterCategory(keyword)).map((category) => (
-                <div className="alert alert-secondary" key={category._id}>
-                  {category.name}
-                  <span className="btn btn-sm float-right">
-                    <DeleteOutlined
-                      className="text-danger"
-                      onClick={() => handleRemove(category.slug)}
-                    />
-                  </span>
-                  <Link
-                    to={`/admin/category/${category.slug}`}
-                    className="btn btn-sm float-right"
-                  >
-                    <EditOutlined className="text-warning" />
-                  </Link>
-                </div>
-              ))}
+            {subCategories &&
+              subCategories
+                .filter(filterCategory(keyword))
+                .map((subcategory) => (
+                  <div className="alert alert-secondary" key={subcategory._id}>
+                    {subcategory.name}
+                    <span className="btn btn-sm float-right">
+                      <DeleteOutlined
+                        className="text-danger"
+                        onClick={() => handleRemove(subcategory.slug)}
+                      />
+                    </span>
+                    <Link
+                      to={`/admin/subcategory/${subcategory.slug}`}
+                      className="btn btn-sm float-right"
+                    >
+                      <EditOutlined className="text-warning" />
+                    </Link>
+                  </div>
+                ))}
           </Spin>
         </div>
       </div>
@@ -148,4 +192,4 @@ const CreateCategory = (props) => {
   );
 };
 
-export default CreateCategory;
+export default SubCreate;
