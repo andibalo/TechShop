@@ -27,7 +27,7 @@ connectDb();
 //Middlewares
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 //Autoload routes
 fs.readdirSync("./src/routes").map((file) => {

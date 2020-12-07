@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AdminNav from "../../components/nav/AdminNav";
+import FileUpload from "../../components/forms/FileUpload";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Spin } from "antd";
@@ -49,7 +50,7 @@ const CreateProduct = (props) => {
     const loadCategories = async () => {
       try {
         const res = await getCategories();
-        console.log(res.data);
+        //console.log(res.data);
         setFormData({ ...formData, categories: res.data });
       } catch (error) {
         console.log(error);
@@ -59,7 +60,7 @@ const CreateProduct = (props) => {
     const loadSubcategories = async () => {
       try {
         const res = await getSubcategories();
-        console.log(res.data);
+        //console.log(res.data);
         setLoadedSubcategories(res.data);
       } catch (error) {
         console.log(error);
@@ -113,6 +114,12 @@ const CreateProduct = (props) => {
         <div className="col">
           <Spin tip="Loading..." size="large" spinning={loading}>
             <h4>Create Product</h4>
+
+            <FileUpload
+              formData={formData}
+              setFormData={setFormData}
+              setLoading={setLoading}
+            />
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <input
@@ -214,7 +221,7 @@ const CreateProduct = (props) => {
                   </option>
                   {categories.length > 0 &&
                     categories.map((c) => (
-                      <option value={c._id} id={c._id}>
+                      <option value={c._id} key={c._id}>
                         {c.name}
                       </option>
                     ))}
