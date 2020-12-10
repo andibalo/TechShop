@@ -17,6 +17,8 @@ import UpdateCategory from "./pages/category/UpdateCategory";
 import SubCreate from "./pages/subcategory/SubCreate";
 import SubUpdate from "./pages/subcategory/SubUpdate";
 import CreateProduct from "./pages/product/CreateProduct";
+import Products from "./pages/product/Products";
+import UpdateProduct from "./pages/product/UpdateProduct";
 
 import UserRoute from "./components/routes/UserRoute";
 import AdminRoute from "./components/routes/AdminRoute";
@@ -85,6 +87,12 @@ const App = () => {
           component={SubUpdate}
         />
         <AdminRoute exact path="/admin/product" component={CreateProduct} />
+        <AdminRoute exact path="/admin/products" component={Products} />
+        <AdminRoute
+          exact
+          path="/admin/product/:slug"
+          component={UpdateProduct}
+        />
       </Switch>
     </Router>
   );

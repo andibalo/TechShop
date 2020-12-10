@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const slugify = require("slugify");
+const { findOneAndUpdate } = require("../models/Product");
 
 exports.create = async (req, res) => {
   try {
@@ -13,14 +14,64 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.read = async (req, res) => {
+exports.list = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({})
+      .limit(parseInt(req.params.count))
+      .populate("category")
+      .populate("subcategories")
+      .sort([["createdAt", "desc"]]);
 
     res.status(200).json(products);
   } catch (error) {
     console.log(error);
 
     res.status(500).send("Could not get products");
+  }
+};
+
+exports.remove = async (req, res) => {
+  try {
+    const deleted = await Product.findOneAndRemove({ slug: req.params.slug });
+
+    res.status(200).json(deleted);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.read = async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug })
+      .populate("category")
+      .populate("subcategories");
+
+    if (!product) {
+      return res.status(400).send("Product not found");
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.update = async (req, res) => {
+
+  try {
+    
+    if(req.body.title){
+      req.body.slug = slugify(req.body.title)
+    }
+
+    const updated = await Product.findOneAndUpdate({slug:req.params.slug}, req.body , {new:true})
+
+    res.status(200).json(updated)
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send('Server error')
   }
 };

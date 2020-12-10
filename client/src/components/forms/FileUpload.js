@@ -102,7 +102,7 @@ const FileUpload = ({ formData, setFormData, setLoading }) => {
           ))}
       </div>
       <div className="row p-3">
-        <label className="btn btn-primary">
+        <label className="btn btn-primary btn-raised">
           Upload Images
           <input
             type="file"
