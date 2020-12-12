@@ -29,6 +29,7 @@ const CreateProduct = (props) => {
 
   const [formData, setFormData] = useState(initialValues);
   const [loading, setLoading] = useState(false);
+  const [productIsCreated, setProductIsCreated] = useState(false);
   const [loadedSubcategories, setLoadedSubcategories] = useState([]);
   const {
     title,
@@ -69,7 +70,8 @@ const CreateProduct = (props) => {
 
     loadCategories();
     loadSubcategories();
-  }, [loading]);
+    setProductIsCreated(false);
+  }, []);
 
   const { user } = useSelector((state) => ({ ...state }));
 
@@ -77,6 +79,7 @@ const CreateProduct = (props) => {
     e.preventDefault();
 
     setLoading(true);
+
     try {
       const res = await createProduct(formData, user.token);
 
@@ -86,6 +89,7 @@ const CreateProduct = (props) => {
         ...initialValues,
       });
       setLoading(false);
+      setProductIsCreated(true);
     } catch (error) {
       console.log(error);
       toast.error("Could not create product");

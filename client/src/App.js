@@ -19,7 +19,7 @@ import SubUpdate from "./pages/subcategory/SubUpdate";
 import CreateProduct from "./pages/product/CreateProduct";
 import Products from "./pages/product/Products";
 import UpdateProduct from "./pages/product/UpdateProduct";
-
+import Product from "./pages/Product";
 import UserRoute from "./components/routes/UserRoute";
 import AdminRoute from "./components/routes/AdminRoute";
 import { auth } from "./firebase";
@@ -75,17 +75,9 @@ const App = () => {
         <UserRoute exact path="/user/wishlist" component={Wishlist} />
         <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
         <AdminRoute exact path="/admin/category" component={CreateCategory} />
-        <AdminRoute
-          exact
-          path="/admin/category/:slug"
-          component={UpdateCategory}
-        />
+
         <AdminRoute exact path="/admin/subcategory" component={SubCreate} />
-        <AdminRoute
-          exact
-          path="/admin/subcategory/:slug"
-          component={SubUpdate}
-        />
+
         <AdminRoute exact path="/admin/product" component={CreateProduct} />
         <AdminRoute exact path="/admin/products" component={Products} />
         <AdminRoute
@@ -93,6 +85,17 @@ const App = () => {
           path="/admin/product/:slug"
           component={UpdateProduct}
         />
+        <AdminRoute
+          exact
+          path="/admin/category/:slug"
+          component={UpdateCategory}
+        />
+        <AdminRoute
+          exact
+          path="/admin/subcategory/:slug"
+          component={SubUpdate}
+        />
+        <Route exact path="/product/:slug" component={Product} />
       </Switch>
     </Router>
   );
