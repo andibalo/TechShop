@@ -18,13 +18,21 @@ const Login = ({ history }) => {
 
   const { user } = useSelector((state) => ({ ...state }));
 
+  const intendedPage = history.location.state;
+
   useEffect(() => {
-    if (user && user.token) {
+    if (!intendedPage && user && user.token) {
       history.push("/");
     }
   }, [user]);
 
   const redirectByRole = (role) => {
+    if (intendedPage) {
+      history.push(intendedPage.from);
+
+      return;
+    }
+
     if (role === "admin") {
       history.push("/admin/dashboard");
     } else {

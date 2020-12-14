@@ -68,3 +68,27 @@ export const getProductsCount = async () => {
 
   return res;
 };
+
+export const rateProduct = async (productId, star, authtoken) => {
+  const res = await axios.put(
+    `${process.env.REACT_APP_API}/product/rating/${productId}`,
+    {
+      star,
+    },
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
+
+  return res;
+};
+
+export const getRelatedProducts = async (productId) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/products/related/${productId}`
+  );
+
+  return res;
+};

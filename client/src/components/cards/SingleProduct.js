@@ -5,11 +5,20 @@ import { HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import ProductInfo from "./ProductInfo";
+import StarRating from "react-star-ratings";
+import RatingModal from "../Modal/RatingModal";
+import AverageRating from "../AverageRating";
 
 const { TabPane } = Tabs;
 
-const SingleProduct = ({ product }) => {
-  const { title, images, description } = product;
+const SingleProduct = ({
+  product,
+  onStarClick,
+  star,
+  submitRating,
+  isLoading,
+}) => {
+  const { title, images, description, _id, ratings } = product;
 
   return (
     <>
@@ -31,6 +40,11 @@ const SingleProduct = ({ product }) => {
       </div>
       <div className="col-md-5">
         <h2 className="bg-info p-3">{title}</h2>
+        {!isLoading && product && ratings ? (
+          <AverageRating product={product} />
+        ) : (
+          <p>No Reviews yet</p>
+        )}
         <Card
           actions={[
             <>
@@ -43,6 +57,15 @@ const SingleProduct = ({ product }) => {
               <br />
               <p>Add To Wishlist</p>
             </Link>,
+            <RatingModal submitRating={submitRating}>
+              <StarRating
+                name={_id}
+                numberOfStars={5}
+                rating={star}
+                changeRating={(newRating, name) => onStarClick(newRating, name)}
+                starRatedColor="red"
+              />
+            </RatingModal>,
           ]}
         >
           <ProductInfo product={product} />

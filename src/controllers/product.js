@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const User = require("../models/User");
 const slugify = require("slugify");
 
 exports.create = async (req, res) => {
@@ -104,4 +105,62 @@ exports.productsCount = async (req, res) => {
   const total = await Product.estimatedDocumentCount();
 
   res.status(200).json(total);
+};
+
+exports.rateProduct = async (req, res) => {
+  const { star } = req.body;
+
+  try {
+    const product = await Product.findById(req.params.productId);
+    const user = await User.findOne({ email: req.user.email });
+
+    const currentUserRating = product.ratings.find(
+      (rating) => rating.postedBy.toString() === user._id.toString()
+    );
+
+    //Add to ratings array
+    if (!currentUserRating) {
+      product.ratings.push({ star, postedBy: user._id });
+
+      await product.save();
+
+      return res.status(200).json(product);
+    }
+
+    //Update rating in ratings array
+
+    currentUserRating.star = star;
+
+    const updateIndex = product.ratings
+      .map((rating) => rating.postedBy.toString())
+      .indexOf(currentUserRating.postedBy.toString());
+
+    product.ratings[updateIndex] = currentUserRating;
+
+    await product.save();
+
+    res.status(200).json(product);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.listRelated = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.productId);
+    const related = await Product.find({
+      _id: { $ne: product._id },
+      category: product.category,
+    })
+      .populate("category")
+      .populate("subcategories")
+      .populate("postedBy")
+      .limit(3);
+
+    res.status(200).json(related);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
 };
