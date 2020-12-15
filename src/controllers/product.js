@@ -1,4 +1,6 @@
 const Product = require("../models/Product");
+const Category = require("../models/Category");
+const Subcategory = require("../models/Subcategory");
 const User = require("../models/User");
 const slugify = require("slugify");
 
@@ -159,6 +161,40 @@ exports.listRelated = async (req, res) => {
       .limit(3);
 
     res.status(200).json(related);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const category = await Category.findOne({ slug: req.params.slug });
+
+    if (!category) {
+      return res.status(400).send("Category not found");
+    }
+
+    const products = await Product.find({ category: category._id });
+
+    res.status(200).json({ category, products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.getProductsBySubcategory = async (req, res) => {
+  try {
+    const subcategory = await Subcategory.findOne({ slug: req.params.slug });
+
+    if (!subcategory) {
+      return res.status(400).send("Subcategory not found");
+    }
+
+    const products = await Product.find({ subcategories: subcategory });
+
+    res.status(200).json({ subcategory, products });
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error");

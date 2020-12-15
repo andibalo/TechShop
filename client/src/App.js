@@ -20,6 +20,8 @@ import CreateProduct from "./pages/product/CreateProduct";
 import Products from "./pages/product/Products";
 import UpdateProduct from "./pages/product/UpdateProduct";
 import Product from "./pages/Product";
+import CategoryHome from "./pages/category/CategoryHome";
+import SubcategoryHome from "./pages/subcategory/SubcategoryHome";
 import UserRoute from "./components/routes/UserRoute";
 import AdminRoute from "./components/routes/AdminRoute";
 import { auth } from "./firebase";
@@ -96,6 +98,8 @@ const App = () => {
           component={SubUpdate}
         />
         <Route exact path="/product/:slug" component={Product} />
+        <Route exact path="/category/:slug" component={CategoryHome} />
+        <Route exact path="/subcategory/:slug" component={SubcategoryHome} />
       </Switch>
     </Router>
   );

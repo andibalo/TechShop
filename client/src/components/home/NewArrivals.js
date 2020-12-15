@@ -33,7 +33,7 @@ const NewArrivals = (props) => {
         setProductsCount(res.data);
         //console.log(res.data);
       })
-      .then((err) => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
 
   return (

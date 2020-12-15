@@ -92,3 +92,19 @@ export const getRelatedProducts = async (productId) => {
 
   return res;
 };
+
+export const getProductsByCategory = async (slug) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/products/category/${slug}`
+  );
+
+  return res;
+};
+
+export const getProductsBySubcategory = async (slug) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API}/products/subcategory/${slug}`
+  );
+
+  return res;
+};
