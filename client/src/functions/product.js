@@ -108,3 +108,12 @@ export const getProductsBySubcategory = async (slug) => {
 
   return res;
 };
+
+export const getProductsByFilter = async (filters) => {
+  const res = await axios.post(
+    `${process.env.REACT_APP_API}/search/filter`,
+    filters
+  );
+
+  return res;
+};

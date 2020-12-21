@@ -13,6 +13,7 @@ const {
   listRelated,
   getProductsByCategory,
   getProductsBySubcategory,
+  searchFilters,
 } = require("../controllers/product");
 
 const { validateToken, validateAdmin } = require("../middlewares/auth");
@@ -20,6 +21,7 @@ const { validateToken, validateAdmin } = require("../middlewares/auth");
 router.post("/product", validateToken, validateAdmin, create);
 router.post("/products", listWithOpts);
 router.get("/products/total", productsCount);
+router.post("/search/filter", searchFilters);
 router.put("/product/rating/:productId", validateToken, rateProduct);
 router.get("/products/:count", list);
 router.delete("/product/:slug", remove);

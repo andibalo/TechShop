@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { Menu } from "antd";
 import { Link } from "react-router-dom";
-import { HomeOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  ShoppingOutlined,
+  ShopOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { auth } from "../../firebase";
 import { LOG_OUT } from "../../reducers/actions";
+import SearchBar from "../forms/SearchBar";
 
 const Header = () => {
   const { Item, SubMenu } = Menu;
@@ -34,6 +41,9 @@ const Header = () => {
     <Menu onClick={handleClick} selectedKeys={current} mode="horizontal">
       <Item key="home" icon={<HomeOutlined />}>
         <Link to="/">Home</Link>
+      </Item>
+      <Item key="shop" icon={<ShopOutlined />}>
+        <Link to="/shop">Shop</Link>
       </Item>
       {!user && (
         <React.Fragment>
@@ -74,6 +84,9 @@ const Header = () => {
           </SubMenu>
         </React.Fragment>
       )}
+      <span className="float-right">
+        <SearchBar />
+      </span>
     </Menu>
   );
 };

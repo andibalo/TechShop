@@ -7,7 +7,11 @@ import SubcategoryList from "../components/subcategory/SubcategoryList";
 const Home = (props) => {
   return (
     <>
-      <div className="jumbotron">Home</div>
+      <div className="jumbotron">
+        <h2 className="text-center display-2 font-weight-normal text-info">
+          Welcome to TechShop
+        </h2>
+      </div>
 
       <div className="container">
         <h4 className="text-center display-2">New Arrivals</h4>

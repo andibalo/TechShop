@@ -7,7 +7,7 @@ const LoadingCard = ({ count }) => {
 
     for (let index = 0; index < count; index++) {
       cardsArray.push(
-        <Card className="col-md-4" style={{ height: "445px" }}>
+        <Card key={index} className="col-md-4" style={{ height: "445px" }}>
           <Skeleton active></Skeleton>
         </Card>
       );

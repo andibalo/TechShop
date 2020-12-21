@@ -200,3 +200,29 @@ exports.getProductsBySubcategory = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+const handleQuery = async (req, res, query) => {
+  const products = await Product.find({ $text: { $search: query } })
+    .populate("category")
+    .populate("subcategories")
+    .populate("postedBy");
+
+  res.status(200).json(products);
+};
+
+exports.searchFilters = async (req, res) => {
+  const { query } = req.body;
+
+  if (!query) {
+    const products = await Product.find()
+      .populate("category")
+      .populate("subcategories")
+      .populate("postedBy");
+
+    return res.status(200).json(products);
+  }
+
+  if (query) {
+    await handleQuery(req, res, query);
+  }
+};

@@ -6,6 +6,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/Home";
+import Shop from "./pages/Shop";
 import Header from "./components/nav/Header";
 import RegisterComplete from "./pages/auth/RegisterComplete";
 import History from "./pages/user/History";
@@ -72,6 +73,7 @@ const App = () => {
         <Route exact path="/register" component={Register} />
         <Route exact path="/register/complete" component={RegisterComplete} />
         <Route exact path="/forget/password" component={ForgotPassword} />
+        <Route exact path="/shop" component={Shop} />
         <UserRoute exact path="/user/history" component={History} />
         <UserRoute exact path="/user/password" component={Password} />
         <UserRoute exact path="/user/wishlist" component={Wishlist} />
