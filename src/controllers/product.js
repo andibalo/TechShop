@@ -207,22 +207,110 @@ const handleQuery = async (req, res, query) => {
     .populate("subcategories")
     .populate("postedBy");
 
-  res.status(200).json(products);
+  return res.status(200).json(products);
 };
 
-exports.searchFilters = async (req, res) => {
-  const { query } = req.body;
+const handleCategory = async (req, res, category) => {
+  const products = await Product.find({ category })
+    .populate("category")
+    .populate("subcategories")
+    .populate("postedBy");
 
-  if (!query) {
-    const products = await Product.find()
+  return res.status(200).json(products);
+};
+
+const handleRating = async (req, res, stars) => {
+  //$PROJECT method passes along the documents with the specified fields or newly created ones
+  //it is guaranteed to have the _id property from the original document
+  //to the next stage of the pipeline
+  //$$ROOT refers to the original document
+  //aggregaate method is a pipeline that does multiple operations to the documents and returns the proccesed documents
+
+  try {
+    const aggregates = await Product.aggregate([
+      {
+        $project: {
+          document: "$$ROOT",
+          floorAverage: {
+            $floor: {
+              $avg: "$ratings.star",
+            },
+          },
+        },
+      },
+      {
+        $match: {
+          floorAverage: stars,
+        },
+      },
+    ]).limit(12);
+    //console.log(aggregates);
+    const products = await Product.find({ _id: aggregates })
       .populate("category")
       .populate("subcategories")
       .populate("postedBy");
 
-    return res.status(200).json(products);
+    //console.log(products);
+    res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json(error);
+  }
+};
+
+const handlePrice = async (req, res, price) => {
+  const products = await Product.find({
+    price: {
+      $gte: price[0],
+      $lte: price[1],
+    },
+  })
+    .populate("category")
+    .populate("subcategories")
+    .populate("postedBy");
+
+  return res.status(200).json(products);
+};
+
+const handleSubcategory = async (req, res, subcategory) => {
+  const products = await Product.find({ subcategories: subcategory })
+    .populate("category")
+    .populate("subcategories")
+    .populate("postedBy")
+    .limit(12);
+  res.status(200).json(products);
+};
+
+exports.searchFilters = async (req, res) => {
+  const { query, price, category, stars, subcategory } = req.body;
+  console.log(req.body);
+
+  if (subcategory) {
+    return await handleSubcategory(req, res, subcategory);
+  }
+
+  if (category && category.length > 0) {
+    return await handleCategory(req, res, category);
+  }
+
+  if (stars) {
+    return await handleRating(req, res, stars);
+  }
+
+  if (price) {
+    return await handlePrice(req, res, price);
   }
 
   if (query) {
     await handleQuery(req, res, query);
   }
+
+  const products = await Product.find()
+    .populate("category")
+    .populate("subcategories")
+    .populate("postedBy")
+    .limit(12);
+
+  return res.status(200).json(products);
 };

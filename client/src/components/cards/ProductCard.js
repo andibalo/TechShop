@@ -7,7 +7,7 @@ import AverageRating from "../AverageRating";
 const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
-  const { title, description, images, slug } = product;
+  const { title, description, images, slug, price } = product;
 
   return (
     <div>
@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
           </>,
         ]}
       >
-        <Meta title={title} description={description} />
+        <Meta title={`${title} - Rp. ${price}`} description={description} />
       </Card>
     </div>
   );
