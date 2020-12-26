@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Spin, Menu, Slider, Checkbox } from "antd";
+import { Spin, Menu, Slider, Checkbox, Radio } from "antd";
 import { SEARCH_PRODUCTS, SEARCH_QUERY } from "../reducers/actions";
 import { getProductsByCount, getProductsByFilter } from "../functions/product";
 import { getCategories } from "../functions/category";
@@ -17,6 +17,22 @@ import FilterStar from "../components/FilterStar";
 const { SubMenu } = Menu;
 
 const Shop = (props) => {
+  const [brands, setBrands] = useState([
+    "Apple",
+    "Samsung",
+    "Microsoft",
+    "Lenovo",
+    "Asus",
+  ]);
+  const [brand, setBrand] = useState(null);
+  const [colors, setColors] = useState([
+    "Black",
+    "Brown",
+    "Silver",
+    "White",
+    "Blue",
+  ]);
+  const [color, setColor] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -24,6 +40,7 @@ const Shop = (props) => {
   const [subcategories, setSubcategories] = useState([]);
   const [price, setPrice] = useState([0, 0]);
   const [ok, setOK] = useState(false);
+  const [shipping, setShipping] = useState("");
   const [categoryEffect, setCategoryEffect] = useState(false);
   const history = useHistory();
   const location = useLocation();
@@ -70,13 +87,16 @@ const Shop = (props) => {
   };
 
   const loadProductsWithFilter = async (filters) => {
+    setLoading(true);
     try {
       const res = await getProductsByFilter(filters);
 
       //console.log(res.data);
       setProducts(res.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -128,6 +148,18 @@ const Shop = (props) => {
       setPrice([0, 0]);
     }
 
+    if (currentFilter !== "brand") {
+      setBrand(null);
+    }
+
+    if (currentFilter !== "color") {
+      setColor(null);
+    }
+
+    if (currentFilter !== "shipping") {
+      setShipping("");
+    }
+
     return;
   };
 
@@ -171,11 +203,33 @@ const Shop = (props) => {
     resetFilter("all");
     loadProductsWithFilter({ subcategory });
   };
+
+  const handleBrand = (e) => {
+    resetFilter("brand");
+    setBrand(e.target.value);
+    loadProductsWithFilter({ brand: e.target.value });
+  };
+
+  const handleColor = (e) => {
+    resetFilter("color");
+    setColor(e.target.value);
+    loadProductsWithFilter({ color: e.target.value });
+  };
+
+  const handleShipping = (e) => {
+    resetFilter("shipping");
+
+    loadProductsWithFilter({ shipping: e.target.value });
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-3">
-          <Menu defaultOpenKeys={["1", "2", "3", "4"]} mode="inline">
+        <div className="col-md-3 pb-5">
+          <Menu
+            defaultOpenKeys={["1", "2", "3", "4", "5", "6", "7"]}
+            mode="inline"
+          >
             <SubMenu
               key="1"
               title={
@@ -274,6 +328,83 @@ const Shop = (props) => {
                       {subcategory.name}
                     </div>
                   ))}
+              </div>
+            </SubMenu>
+            <SubMenu
+              key="5"
+              title={
+                <span className="h6">
+                  <DownSquareOutlined /> Brands
+                </span>
+              }
+            >
+              <div className="mx-4">
+                {brands.length > 0 &&
+                  brands.map((b) => (
+                    <Radio
+                      key={b}
+                      value={b}
+                      name={b}
+                      checked={b === brand}
+                      onChange={handleBrand}
+                      className="d-block py-1"
+                    >
+                      {b}
+                    </Radio>
+                  ))}
+              </div>
+            </SubMenu>
+            <SubMenu
+              key="6"
+              title={
+                <span className="h6">
+                  <DownSquareOutlined /> Colors
+                </span>
+              }
+            >
+              <div className="mx-4">
+                {colors.length > 0 &&
+                  colors.map((c) => (
+                    <Radio
+                      key={c}
+                      value={c}
+                      name={c}
+                      checked={c === color}
+                      onChange={handleColor}
+                      className="d-block py-1"
+                    >
+                      {c}
+                    </Radio>
+                  ))}
+              </div>
+            </SubMenu>
+            <SubMenu
+              key="7"
+              title={
+                <span className="h6">
+                  <DownSquareOutlined /> Shipping
+                </span>
+              }
+            >
+              <div className="mx-4">
+                <Radio
+                  value="true"
+                  name="true"
+                  checked={shipping === "true"}
+                  onChange={handleShipping}
+                  className="d-block py-1"
+                >
+                  Yes
+                </Radio>
+                <Radio
+                  value="false"
+                  name="false"
+                  checked={shipping === "true"}
+                  onChange={handleShipping}
+                  className="d-block py-1"
+                >
+                  No
+                </Radio>
               </div>
             </SubMenu>
           </Menu>
