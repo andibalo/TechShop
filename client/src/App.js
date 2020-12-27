@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Header from "./components/nav/Header";
+import SideDrawer from "./components/drawer/SideDrawer";
 import RegisterComplete from "./pages/auth/RegisterComplete";
 import History from "./pages/user/History";
 import Password from "./pages/user/Password";
@@ -67,6 +68,7 @@ const App = () => {
   return (
     <Router>
       <Header />
+      <SideDrawer />
       <ToastContainer />
       <Switch>
         <Route exact path="/" component={Home} />

@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { auth } from "../../firebase";
-import { LOG_OUT } from "../../reducers/actions";
+import { LOG_OUT, SET_VISIBILITY } from "../../reducers/actions";
 import SearchBar from "../forms/SearchBar";
 
 const Header = () => {
@@ -52,6 +52,19 @@ const Header = () => {
           </Badge>
         </Link>
       </Item>
+      <span className="float-right">
+        <button
+          onClick={() => {
+            dispatch({
+              type: SET_VISIBILITY,
+              payload: true,
+            });
+          }}
+          className="btn btn-primary mx-2"
+        >
+          View Cart
+        </button>
+      </span>
       {!user && (
         <React.Fragment>
           <Item key="register" icon={<UserOutlined />} className="float-right">

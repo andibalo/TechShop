@@ -1,15 +1,49 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import CartItem from "../components/CartItem";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
   const { user, cart } = useSelector((state) => ({ ...state }));
 
+  const getTotal = () => {
+    return cart.reduce((totalPrice, item) => {
+      return totalPrice + item.price * item.count;
+    }, 0);
+  };
+
+  const showCartItems = () => {
+    return (
+      <table className="table table-bordered">
+        <thead className="thead-light">
+          <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Title</th>
+            <th scope="col">Price</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Color</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Shipping</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cart &&
+            cart.map((product) => (
+              <CartItem key={product._id} product={product} />
+            ))}
+        </tbody>
+      </table>
+    );
+  };
+
   return (
-    <div className="container-fluid py-2">
+    <div className="container-fluid py-3">
       <div className="row">
-        <h4>Cart</h4>
+        <div className="col">
+          <h4>Cart</h4>
+        </div>
       </div>
       <div className="row">
         <div className="col-md-8">
@@ -18,7 +52,7 @@ const Cart = (props) => {
               No products in cart. <Link to="/shop">Continue Shopping.</Link>
             </p>
           ) : (
-            "show items"
+            showCartItems()
           )}
         </div>
         <div className="col-md-4">
@@ -34,15 +68,29 @@ const Cart = (props) => {
               </div>
             ))}
           <hr />
-          <p>Total: </p>
+          <p>
+            Total: <b>Rp. {getTotal()}</b>
+          </p>
           <hr />
           {user && user.token ? (
-            <button className="btn btn-sm btn-primary mt-2">
+            <button
+              className="btn btn-sm btn-primary mt-2"
+              disabled={!cart.length}
+            >
               Proceed To Checkout
             </button>
           ) : (
             <button className="btn btn-sm btn-primary mt-2">
-              Login to checkout
+              <Link
+                to={{
+                  pathname: "/login",
+                  state: {
+                    from: "/cart",
+                  },
+                }}
+              >
+                Login to checkout
+              </Link>
             </button>
           )}
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ADD_TO_CART } from "../../reducers/actions";
+import { ADD_TO_CART, SET_VISIBILITY } from "../../reducers/actions";
 import { Card, Tooltip } from "antd";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -39,6 +39,11 @@ const ProductCard = ({ product }) => {
     dispatch({
       type: ADD_TO_CART,
       payload: cart,
+    });
+
+    dispatch({
+      type: SET_VISIBILITY,
+      payload: true,
     });
   };
 
