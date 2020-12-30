@@ -17,13 +17,14 @@ const SideDrawer = (props) => {
 
   const showCartItems = () => {
     return cart.map((product) => (
-      <div className="text-center">
+      <div className="text-center" key={product._id}>
         <img
           src={
             product.images && product.images.length > 0
               ? product.images[0].url
               : `https://via.placeholder.com/150`
           }
+          alt="image"
           style={imageStyles}
         />
         <p className="bg-secondary text-center text-light">
@@ -48,7 +49,7 @@ const SideDrawer = (props) => {
     >
       <div>
         {cart && cart.length > 0 && showCartItems()}
-        <Link to="/shop">
+        <Link to="/cart">
           <button className="btn btn-primary text-center btn-block btn-raised">
             Go To Cart
           </button>

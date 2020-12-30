@@ -11,7 +11,7 @@ const app = express();
 const connectDb = async () => {
   try {
     await mongoose.connect(process.env.DATABASE_URI, {
-      useFindAndModify: true,
+      useFindAndModify: false,
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,

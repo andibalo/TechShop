@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../components/CartItem";
+import axios from "axios";
 
-const Cart = (props) => {
+const Cart = ({ history }) => {
   const dispatch = useDispatch();
   const { user, cart } = useSelector((state) => ({ ...state }));
 
@@ -11,6 +12,31 @@ const Cart = (props) => {
     return cart.reduce((totalPrice, item) => {
       return totalPrice + item.price * item.count;
     }, 0);
+  };
+
+  const saveUserCartItems = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API}/user/cart`,
+        { cart },
+        {
+          headers: {
+            authtoken: user.token,
+          },
+        }
+      );
+
+      //console.log(res);
+      if (res.status === 200) {
+        history.push("/checkout");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleProceedCheckout = () => {
+    saveUserCartItems();
   };
 
   const showCartItems = () => {
@@ -60,10 +86,11 @@ const Cart = (props) => {
 
           <p>Products:</p>
           {cart.length > 0 &&
-            cart.map((item) => (
-              <div>
+            cart.map((item, index) => (
+              <div key={item._id}>
                 <p>
-                  {item.title} x {item.count} = Rp. {item.price * item.count}
+                  {index + 1}. {item.title} x {item.count} = Rp.
+                  {item.price * item.count}
                 </p>
               </div>
             ))}
@@ -76,6 +103,7 @@ const Cart = (props) => {
             <button
               className="btn btn-sm btn-primary mt-2"
               disabled={!cart.length}
+              onClick={handleProceedCheckout}
             >
               Proceed To Checkout
             </button>
