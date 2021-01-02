@@ -1,6 +1,7 @@
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const User = require("../models/User");
+const Coupon = require("../models/Coupon");
 
 exports.saveUserCart = async (req, res) => {
   //We save the user cart to database for security reasons
@@ -96,4 +97,34 @@ exports.getAddress = async (req, res) => {
   }
 
   res.status(200).json(user);
+};
+
+exports.applyCouponToCart = async (req, res) => {
+  const { name } = req.body;
+
+  const existingCoupon = await Coupon.findOne({ name });
+
+  if (!existingCoupon) {
+    res.json({ err: "This coupon code is not valid", code: 1050 });
+    return;
+  }
+
+  const user = await User.findOne({ email: req.user.email });
+
+  const cart = await Cart.findOne({ orderedBy: user._id });
+  //console.log(cart);
+  cart.totalAfterDiscount = (
+    cart.cartTotal -
+    cart.cartTotal * (existingCoupon.discount / 100)
+  ).toFixed(2);
+  //console.log("NEW CART", cart);
+
+  await cart.save();
+
+  res
+    .status(200)
+    .json({
+      total: cart.totalAfterDiscount,
+      discount: existingCoupon.discount,
+    });
 };

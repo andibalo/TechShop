@@ -71,3 +71,23 @@ export const getUserAddress = async (authtoken) => {
     console.log(error);
   }
 };
+
+export const applyCoupon = async (authtoken, coupon) => {
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API}/user/cart/coupon`,
+      {
+        name: coupon.toUpperCase(),
+      },
+      {
+        headers: {
+          authtoken,
+        },
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -6,3 +6,4 @@ export const LOADING = "LOADING";
 export const ADD_TO_CART = "ADD_TO_CART";
 export const EMPTY_CART = "EMPTY_CART";
 export const SET_VISIBILITY = "SET_VISIBILITY";
+export const COUPON_APPLIED = "COUPON_APPLIED";
