@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import AverageRating from "../AverageRating";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
+import { formatRupiah } from "../../functions/product";
 
 const { Meta } = Card;
 
@@ -76,7 +77,10 @@ const ProductCard = ({ product }) => {
           </Tooltip>,
         ]}
       >
-        <Meta title={`${title} - Rp. ${price}`} description={description} />
+        <Meta
+          title={`${title} - ${formatRupiah(price)}`}
+          description={description}
+        />
       </Card>
     </div>
   );

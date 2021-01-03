@@ -1,6 +1,7 @@
 import React from "react";
 import ModalImage from "react-modal-image";
 import { useDispatch } from "react-redux";
+import { formatRupiah } from "../functions/product";
 import { ADD_TO_CART } from "../reducers/actions";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
@@ -60,7 +61,7 @@ const CartItem = ({ product }) => {
         )}
       </td>
       <td>{product.title}</td>
-      <td>Rp. {product.price}</td>
+      <td>{formatRupiah(product.price)}</td>
       <td>{product.brand}</td>
       <td>{product.color}</td>
       <td>

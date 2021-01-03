@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Spin, Input } from "antd";
 import { toast } from "react-toastify";
 import { EMPTY_CART, COUPON_APPLIED } from "../reducers/actions";
+import { formatRupiah } from "../functions/product";
 
 const { TextArea } = Input;
 
@@ -58,6 +59,7 @@ const Checkout = ({ history }) => {
   };
 
   useEffect(() => {
+    localStorage.setItem("isCouponApplied", false);
     loadUserCart();
     loadUserAddress();
   }, []);
@@ -102,14 +104,18 @@ const Checkout = ({ history }) => {
 
   const handleApplyCoupon = async () => {
     //console.log("COUPON", coupon);
-
+    setLoading(true);
     try {
       const res = await applyCoupon(user && user.token, coupon);
 
       if (res.data.code === 1050) {
         toast.error("Coupon code is not valid");
+        setLoading(false);
         return;
       }
+
+      localStorage.setItem("isCouponApplied", true);
+
       console.log(res.data);
       setTotalAfterDiscount(res.data.total);
       setDiscount(res.data.discount);
@@ -117,8 +123,10 @@ const Checkout = ({ history }) => {
         type: COUPON_APPLIED,
         payload: true,
       });
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -171,8 +179,8 @@ const Checkout = ({ history }) => {
                 products.length > 0 &&
                 products.map((product, i) => (
                   <p key={i}>
-                    {i + 1}. {product.product.title} x {product.count} = Rp.{" "}
-                    {product.product.price * product.count}
+                    {i + 1}. {product.product.title} x {product.count} ={" "}
+                    {formatRupiah(product.product.price * product.count)}
                   </p>
                 ))}
             </div>

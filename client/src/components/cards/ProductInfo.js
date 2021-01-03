@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { formatRupiah } from "../../functions/product";
 
 const ProductInfo = ({ product }) => {
   const {
@@ -19,7 +20,7 @@ const ProductInfo = ({ product }) => {
         Price
         {price && (
           <span className="label label-defaul label-pill pull-xs-right">
-            Rp. {price}
+            {formatRupiah(price)}
           </span>
         )}
       </li>

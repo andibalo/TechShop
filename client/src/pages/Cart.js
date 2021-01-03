@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import CartItem from "../components/CartItem";
 import axios from "axios";
+import { formatRupiah } from "../functions/product";
 
 const Cart = ({ history }) => {
   const dispatch = useDispatch();
@@ -89,14 +90,14 @@ const Cart = ({ history }) => {
             cart.map((item, index) => (
               <div key={item._id}>
                 <p>
-                  {index + 1}. {item.title} x {item.count} = Rp.
-                  {item.price * item.count}
+                  {index + 1}. {item.title} x {item.count} ={" "}
+                  {formatRupiah(item.price * item.count)}
                 </p>
               </div>
             ))}
           <hr />
           <p>
-            Total: <b>Rp. {getTotal()}</b>
+            Total: <b>{formatRupiah(getTotal())}</b>
           </p>
           <hr />
           {user && user.token ? (

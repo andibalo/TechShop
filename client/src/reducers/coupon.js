@@ -1,6 +1,10 @@
 import { COUPON_APPLIED } from "./actions";
 
-export default (state = false, action) => {
+const initialState = localStorage.getItem("isCouponApplied")
+  ? !!localStorage.getItem("isCouponApplied")
+  : false;
+
+export default (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
