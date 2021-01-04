@@ -8,8 +8,8 @@ exports.createPaymentIntent = async (req, res) => {
   const user = await User.findOne({ email: req.user.email });
 
   const cart = await Cart.findOne({ orderedBy: user._id });
-
-  //console.log(cart);
+  // console.log(isCouponApplied);
+  // console.log(cart);
 
   const finalAmount = isCouponApplied
     ? cart.totalAfterDiscount

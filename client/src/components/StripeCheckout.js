@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { EMPTY_CART, COUPON_APPLIED } from "../reducers/actions";
 import { DollarCircleOutlined } from "@ant-design/icons";
 import { formatRupiah } from "../functions/product";
+import { Spin } from "antd";
+import { createOrder } from "../functions/user";
 
 const StripeCheckout = ({ history }) => {
   const [success, setSuccess] = useState(false);
@@ -14,20 +16,24 @@ const StripeCheckout = ({ history }) => {
   const [processing, setProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
   const [finalAmount, setFinalAmount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { user, coupon } = useSelector((state) => ({ ...state }));
   const stripe = useStripe();
   const elements = useElements();
 
   const getClientSecret = async () => {
+    setLoading(true);
     try {
       const res = await createPaymentIntent(user && user.token, coupon);
 
       console.log("Payment Intent", res.data);
       setClientSecret(res.data.clientSecret);
       setFinalAmount(res.data.finalAmount);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -73,12 +79,10 @@ const StripeCheckout = ({ history }) => {
 
       return;
     }
+    //console.log(payload);
+    const res = await createOrder(user && user.token, payload);
 
-    console.log(payload);
-    setError(null);
-    setProcessing(false);
-    setSuccess(true);
-
+    //console.log(res.data);
     localStorage.removeItem("isCouponApplied");
     localStorage.removeItem("cart");
 
@@ -91,8 +95,12 @@ const StripeCheckout = ({ history }) => {
       payload: false,
     });
 
+    setError(null);
+    setProcessing(false);
+    setSuccess(true);
+
     toast.success("Order had been successfully placed!");
-    history("/user/history");
+    history.push("/user/history");
   };
 
   const handleChange = async (e) => {
@@ -103,32 +111,38 @@ const StripeCheckout = ({ history }) => {
 
   return (
     <>
-      <div className="my-4">
-        <DollarCircleOutlined className="text-primary h2" />
-        <p>
-          Amount you have to pay is: <b>{formatRupiah(finalAmount)}</b>
-        </p>
-      </div>
-      <form id="payment-form" className="stripe-form" onSubmit={handleSubmit}>
-        <CardElement
-          id="cart-element"
-          options={cartStyle}
-          onChange={handleChange}
-        />
-        <button
-          className="stripe-button"
-          disabled={processing || disabled || success}
-        >
-          <span id="button-text">
-            {processing ? <div className="spinner" id="spinner"></div> : "Pay"}
-          </span>
-        </button>
-        {error && (
-          <div className="card-error" role="alert">
-            {error}
-          </div>
-        )}
-      </form>
+      <Spin spinning={loading} size="large" tip="Loading...">
+        <div className="my-4">
+          <DollarCircleOutlined className="text-primary h2" />
+          <p>
+            Amount you have to pay is: <b>{formatRupiah(finalAmount)}</b>
+          </p>
+        </div>
+        <form id="payment-form" className="stripe-form" onSubmit={handleSubmit}>
+          <CardElement
+            id="cart-element"
+            options={cartStyle}
+            onChange={handleChange}
+          />
+          <button
+            className="stripe-button"
+            disabled={processing || disabled || success}
+          >
+            <span id="button-text">
+              {processing ? (
+                <div className="spinner" id="spinner"></div>
+              ) : (
+                "Pay"
+              )}
+            </span>
+          </button>
+          {error && (
+            <div className="card-error" role="alert">
+              {error}
+            </div>
+          )}
+        </form>
+      </Spin>
     </>
   );
 };

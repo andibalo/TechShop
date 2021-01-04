@@ -17,7 +17,8 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const { cart, user } = useSelector((state) => ({ ...state }));
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
     let cart = [];
 
     if (localStorage.getItem("cart")) {
@@ -68,12 +69,12 @@ const ProductCard = ({ product }) => {
             <p>View Product</p>
           </Link>,
           <Tooltip title={tooltip}>
-            <span onClick={handleAddToCart}>
+            <a onClick={handleAddToCart} disabled={product.quantity <= 0}>
               <ShoppingCartOutlined />
 
               <br />
-              <p>Add To Cart</p>
-            </span>
+              <p>{product.quantity <= 0 ? "Out Of Stock" : "Add To Cart"}</p>
+            </a>
           </Tooltip>,
         ]}
       >

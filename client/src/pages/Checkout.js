@@ -60,6 +60,10 @@ const Checkout = ({ history }) => {
 
   useEffect(() => {
     localStorage.setItem("isCouponApplied", false);
+    dispatch({
+      type: COUPON_APPLIED,
+      payload: false,
+    });
     loadUserCart();
     loadUserAddress();
   }, []);

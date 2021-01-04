@@ -2,6 +2,7 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const User = require("../models/User");
 const Coupon = require("../models/Coupon");
+const Order = require("../models/Order");
 
 exports.saveUserCart = async (req, res) => {
   //We save the user cart to database for security reasons
@@ -121,10 +122,44 @@ exports.applyCouponToCart = async (req, res) => {
 
   await cart.save();
 
-  res
-    .status(200)
-    .json({
-      total: cart.totalAfterDiscount,
-      discount: existingCoupon.discount,
-    });
+  res.status(200).json({
+    total: cart.totalAfterDiscount,
+    discount: existingCoupon.discount,
+  });
+};
+
+exports.createOrderAndEmptyCart = async (req, res) => {
+  const { paymentIntent } = req.body.stripeResponse;
+
+  const user = await User.findOne({ email: req.user.email });
+
+  const cart = await Cart.findOne({ orderedBy: user._id });
+
+  const order = await new Order({
+    products: cart.products,
+    paymentIntent,
+    orderedBy: user._id,
+  }).save();
+
+  let bulkOption = cart.products.map((item) => {
+    return {
+      updateOne: {
+        filter: {
+          _id: item.product._id,
+        },
+        update: {
+          $inc: {
+            sold: +item.count,
+            quantity: -item.count,
+          },
+        },
+      },
+    };
+  });
+
+  const updatedProducts = await Product.bulkWrite(bulkOption, {});
+  //console.log("UPDATED PRODUCTS", updatedProducts);
+  await cart.remove();
+
+  res.status(200).json(order);
 };

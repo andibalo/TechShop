@@ -91,3 +91,23 @@ export const applyCoupon = async (authtoken, coupon) => {
     console.log(error);
   }
 };
+
+export const createOrder = async (authtoken, stripeResponse) => {
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API}/user/order`,
+      {
+        stripeResponse,
+      },
+      {
+        headers: {
+          authtoken,
+        },
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
