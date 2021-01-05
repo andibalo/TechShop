@@ -5,7 +5,7 @@ import { Route, Redirect } from "react-router-dom";
 const UserRoute = ({ children, ...rest }) => {
   const { user } = useSelector((state) => ({ ...state }));
 
-  return user && user.token ? (
+  return !user.loading && user.token ? (
     <Route {...rest} render={() => children} />
   ) : (
     <Redirect to="/login"></Redirect>

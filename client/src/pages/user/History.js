@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { Spin } from "antd";
 import { formatRupiah } from "../../functions/product";
 import PaymentInfo from "../../components/PaymentInfo";
+import Invoice from "../../components/Invoice";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 const History = (props) => {
   const [orders, setOrders] = useState([]);
@@ -82,6 +84,16 @@ const History = (props) => {
     </table>
   );
 
+  const renderPdfDownloadBtn = (order) => (
+    <PDFDownloadLink
+      className="btn btn-outline-primary"
+      fileName="invoice.pdf"
+      document={<Invoice order={order} />}
+    >
+      Download PDF
+    </PDFDownloadLink>
+  );
+
   const renderOrders = () => {
     return orders.map((order, i) => (
       <div key={i} className="m-4 p-3 card">
@@ -95,7 +107,7 @@ const History = (props) => {
         </h5>
         <PaymentInfo paymentInfo={order.paymentIntent} />
         {renderOrderProducts(order)}
-        <button className="btn btn-outline-primary">Download PDF</button>
+        {renderPdfDownloadBtn(order)}
       </div>
     ));
   };

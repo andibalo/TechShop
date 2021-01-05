@@ -12,7 +12,7 @@ const PaymentInfo = ({ paymentInfo }) => {
         {new Date(paymentInfo.created * 1000).toLocaleString()}
       </p>
       <p className="mr-3">
-        <b>Total Paid:</b> {formatRupiah(paymentInfo.amount)}
+        <b>Total Paid:</b> {formatRupiah((paymentInfo.amount /= 100))}
       </p>
       <p>
         <b>Currency:</b> {paymentInfo.currency.toUpperCase()}

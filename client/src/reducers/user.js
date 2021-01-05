@@ -1,10 +1,14 @@
 import { GET_USER, LOG_OUT } from "./actions";
 
-export default (state = null, action) => {
+const initialState = {
+  loading: true,
+};
+
+export default (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case GET_USER:
-      return payload;
+      return { ...payload, loading: false };
     case LOG_OUT:
       return null;
     default:
