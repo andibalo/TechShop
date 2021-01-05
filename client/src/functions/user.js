@@ -111,3 +111,21 @@ export const createOrder = async (authtoken, stripeResponse) => {
     console.log(error);
   }
 };
+
+export const getUserOrders = async (authtoken) => {
+  try {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API}/user/orders`,
+
+      {
+        headers: {
+          authtoken,
+        },
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

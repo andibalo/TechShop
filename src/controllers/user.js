@@ -163,3 +163,13 @@ exports.createOrderAndEmptyCart = async (req, res) => {
 
   res.status(200).json(order);
 };
+
+exports.getOrders = async (req, res) => {
+  const user = await User.findOne({ email: req.user.email });
+
+  const orders = await Order.find({ orderedBy: user._id }).populate(
+    "products.product"
+  );
+
+  res.status(200).json(orders);
+};

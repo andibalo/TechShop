@@ -15,8 +15,6 @@
     "mongoose": "^5.10.15",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.6",
-    "react-datepicker": "^3.3.0",
-    "react-responsive-carousel": "^3.2.11",
     "slugify": "^1.4.6",
     "stripe": "^8.129.0"
   },
