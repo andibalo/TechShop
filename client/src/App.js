@@ -48,7 +48,8 @@ const App = () => {
         //console.log(idTokenResult.token);
         currentUser(idTokenResult.token)
           .then((res) => {
-            const { name, email, role, _id } = res.data;
+            console.log("CURRENT USER", res.data);
+            const { name, email, role, _id, wishlist } = res.data;
 
             dispatch({
               type: GET_USER,
@@ -58,6 +59,7 @@ const App = () => {
                 role,
                 name,
                 id: _id,
+                wishlist,
               },
             });
           })

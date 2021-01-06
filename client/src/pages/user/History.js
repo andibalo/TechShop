@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserNav from "../../components/nav/UserNav";
 import { getUserOrders } from "../../functions/user";
+import { setStatusColor } from "../../functions/admin";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -33,23 +34,6 @@ const History = (props) => {
   useEffect(() => {
     loadUserOrders();
   }, []);
-
-  const setStatusColor = (status) => {
-    switch (true) {
-      case status === "Not Processed":
-        return "#87827e";
-      case status === "Processing":
-        return "#f2a622";
-      case status === "Dispatched":
-        return "#f0ec1d";
-      case status === "Cancelled":
-        return "#ed3b13";
-      case status === "Compeleted":
-        return "#12db37";
-      default:
-        return "initial";
-    }
-  };
 
   const renderOrderProducts = (order) => (
     <table className="table table-bordered">

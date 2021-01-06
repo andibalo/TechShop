@@ -129,3 +129,57 @@ export const getUserOrders = async (authtoken) => {
     console.log(error);
   }
 };
+
+export const getUserWishlist = async (authtoken) => {
+  try {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API}/user/wishlist`,
+
+      {
+        headers: {
+          authtoken,
+        },
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeWishlist = async (authtoken, productId) => {
+  try {
+    const res = await axios.delete(
+      `${process.env.REACT_APP_API}/user/wishlist/${productId}`,
+
+      {
+        headers: {
+          authtoken,
+        },
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addToWishlist = async (authtoken, productId) => {
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API}/user/wishlist`,
+      { productId },
+      {
+        headers: {
+          authtoken,
+        },
+      }
+    );
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

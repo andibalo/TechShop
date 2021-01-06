@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { ADD_TO_CART, SET_VISIBILITY } from "../../reducers/actions";
+import {
+  ADD_TO_CART,
+  SET_VISIBILITY,
+  USER_WISHLIST,
+} from "../../reducers/actions";
 import { Card, Tabs, Tooltip } from "antd";
-import { Link } from "react-router-dom";
+
 import { HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
@@ -11,6 +15,7 @@ import RatingModal from "../Modal/RatingModal";
 import { toast } from "react-toastify";
 import AverageRating from "../AverageRating";
 import { useSelector, useDispatch } from "react-redux";
+import { addToWishlist } from "../../functions/user";
 
 const { TabPane } = Tabs;
 
@@ -58,6 +63,21 @@ const SingleProduct = ({
     });
   };
 
+  const handleAddToWishlist = async () => {
+    try {
+      const res = await addToWishlist(user && user.token, _id);
+
+      console.log(res.data);
+
+      dispatch({
+        type: USER_WISHLIST,
+        payload: res.data.wishlist,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="col-md-7">
@@ -93,11 +113,11 @@ const SingleProduct = ({
                 <p>Add To Cart</p>
               </span>
             </Tooltip>,
-            <Link to="/">
+            <span onClick={handleAddToWishlist}>
               <HeartOutlined className="text-danger" />
               <br />
               <p>Add To Wishlist</p>
-            </Link>,
+            </span>,
             <RatingModal submitRating={submitRating}>
               <StarRating
                 name={_id}

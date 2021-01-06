@@ -1,11 +1,13 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Drawer } from "antd";
 import { SET_VISIBILITY } from "../../reducers/actions";
 
 const SideDrawer = (props) => {
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const imageStyles = {
     width: "100%",
@@ -34,6 +36,15 @@ const SideDrawer = (props) => {
     ));
   };
 
+  const handleGoToCart = () => {
+    dispatch({
+      type: SET_VISIBILITY,
+      payload: false,
+    });
+
+    history.push("/cart");
+  };
+
   return (
     <Drawer
       className="text-center"
@@ -49,11 +60,13 @@ const SideDrawer = (props) => {
     >
       <div>
         {cart && cart.length > 0 && showCartItems()}
-        <Link to="/cart">
-          <button className="btn btn-primary text-center btn-block btn-raised">
-            Go To Cart
-          </button>
-        </Link>
+
+        <button
+          className="btn btn-primary text-center btn-block btn-raised"
+          onClick={handleGoToCart}
+        >
+          Go To Cart
+        </button>
       </div>
     </Drawer>
   );
