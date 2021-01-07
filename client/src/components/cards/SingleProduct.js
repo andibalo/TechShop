@@ -6,7 +6,11 @@ import {
 } from "../../reducers/actions";
 import { Card, Tabs, Tooltip } from "antd";
 
-import { HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  HeartOutlined,
+  ShoppingCartOutlined,
+  HeartFilled,
+} from "@ant-design/icons";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import ProductInfo from "./ProductInfo";
@@ -15,7 +19,7 @@ import RatingModal from "../Modal/RatingModal";
 import { toast } from "react-toastify";
 import AverageRating from "../AverageRating";
 import { useSelector, useDispatch } from "react-redux";
-import { addToWishlist } from "../../functions/user";
+import { addToWishlist, removeWishlist } from "../../functions/user";
 
 const { TabPane } = Tabs;
 
@@ -65,9 +69,15 @@ const SingleProduct = ({
 
   const handleAddToWishlist = async () => {
     try {
-      const res = await addToWishlist(user && user.token, _id);
+      let res;
 
-      console.log(res.data);
+      if (user && user.wishlist.indexOf(_id) !== -1) {
+        res = await removeWishlist(user && user.token, _id);
+      } else {
+        res = await addToWishlist(user && user.token, _id);
+      }
+
+      //console.log(res.data);
 
       dispatch({
         type: USER_WISHLIST,
@@ -114,9 +124,18 @@ const SingleProduct = ({
               </span>
             </Tooltip>,
             <span onClick={handleAddToWishlist}>
-              <HeartOutlined className="text-danger" />
+              {user && user.wishlist.indexOf(_id) !== -1 ? (
+                <HeartFilled className="text-danger" />
+              ) : (
+                <HeartOutlined className="text-danger" />
+              )}
+
               <br />
-              <p>Add To Wishlist</p>
+              <p>
+                {user && user.wishlist.indexOf(_id) !== -1
+                  ? "Remove From Wishlist"
+                  : "Add To Wishlist"}
+              </p>
             </span>,
             <RatingModal submitRating={submitRating}>
               <StarRating
